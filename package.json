@@ -1,0 +1,14 @@
+{
+  "name": "superscience",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --dir frontend dev",
+    "build": "pnpm --dir frontend build && go build ./cmd/superscience",
+    "test": "go test ./... && pnpm --dir frontend test",
+    "lint": "pnpm --dir frontend lint && ./scripts/check-production-placeholders.sh",
+    "e2e": "pnpm --dir frontend e2e",
+    "verify": "go test -race ./... && go vet ./... && go run golang.org/x/vuln/cmd/govulncheck@v1.6.0 ./... && pnpm --dir frontend lint && pnpm --dir frontend test && pnpm --dir frontend build && pnpm --dir frontend exec playwright test && pnpm audit --prod && ./scripts/check-production-placeholders.sh"
+  },
+  "packageManager": "pnpm@11.7.0"
+}

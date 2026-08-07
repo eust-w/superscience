@@ -1,0 +1,2 @@
+jupyter_client>=8.6,<9
+ipykernel>=6.29,<7

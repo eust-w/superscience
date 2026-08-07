@@ -1,0 +1,35 @@
+{
+  "name": "@superscience/frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "test": "vitest run",
+    "lint": "tsc -b --pretty false",
+    "e2e": "pnpm build && playwright test"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "@tanstack/react-query": "^5.101.2",
+    "@vitejs/plugin-react": "5.1.1",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0",
+    "katex": "^0.17.0",
+    "lucide-react": "0.468.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "react-router": "8.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "@types/katex": "^0.16.8",
+    "@types/node": "22.13.9",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "typescript": "^5.8.2",
+    "vite": "7.3.6",
+    "vitest": "3.2.4"
+  }
+}
