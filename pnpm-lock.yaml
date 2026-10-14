@@ -30,7 +30,7 @@ importers:
     dependencies:
       '@monaco-editor/react':
         specifier: ^4.7.0
-        version: 4.7.0(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 4.7.0(monaco-editor@0.55.1)(react-dom@19.2.8(react@19.2.7))(react@19.2.7)
       '@tanstack/react-query':
         specifier: ^5.101.2
         version: 5.101.2(react@19.2.7)
@@ -53,11 +53,11 @@ importers:
         specifier: 19.2.7
         version: 19.2.7
       react-dom:
-        specifier: 19.2.7
-        version: 19.2.7(react@19.2.7)
+        specifier: 19.2.8
+        version: 19.2.8(react@19.2.7)
       react-router:
         specifier: 8.3.0
-        version: 8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 8.3.0(react-dom@19.2.8(react@19.2.7))(react@19.2.7)
     devDependencies:
       '@playwright/test':
         specifier: 1.61.1
@@ -72,8 +72,8 @@ importers:
         specifier: 19.2.7
         version: 19.2.7
       '@types/react-dom':
-        specifier: 19.2.3
-        version: 19.2.3(@types/react@19.2.7)
+        specifier: 19.2.4
+        version: 19.2.4(@types/react@19.2.7)
       typescript:
         specifier: ^5.8.2
         version: 5.9.3
@@ -532,8 +532,8 @@ packages:
   '@types/node@22.13.9':
     resolution: {integrity: sha512-acBjXdRJ3A6Pb3tqnw9HZmyR3Fiol3aGxRCK1x3d+6CDAMjl7I649wpSd+yNURCjbOUGu9tqtLKnTGxmK6CyGw==}
 
-  '@types/react-dom@19.2.3':
-    resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
+  '@types/react-dom@19.2.4':
+    resolution: {integrity: sha512-Bsc+QHgp+P/F02XDzNCY9jnZNCUuLki36KT7VKrTXXLdHf+vHMNZnW1rVu5DNW/rCK+fya3DATySbLM4yhtKUw==}
     peerDependencies:
       '@types/react': ^19.2.0
 
@@ -770,10 +770,10 @@ packages:
     resolution: {integrity: sha512-DTPx3RWSSnWyzLxQnlH0rJP+EW5ekl16ZU4/psbIhA0e53kJfdgaN5vKM+xP7yJtXVu+nfdVFmlgFDEKAe4Pyw==}
     engines: {node: ^10 || ^12 || >=14}
 
-  react-dom@19.2.7:
-    resolution: {integrity: sha512-t0BRVXvbiE/o20Hfw669rLbMCDWtYZLvmJigy2f0MxsXF+71pxhR3xOkspmsO8h3ZlNzyibAmtCa3l4lYKk6gQ==}
+  react-dom@19.2.8:
+    resolution: {integrity: sha512-rVprimfGBG3DR+Tq0IQG2DT5PxKth1WIGDmj5yPmlzr4YBe7uyE+Du4oVqTDXZSHGGGXRtTJEGSSePyQCMBglQ==}
     peerDependencies:
-      react: ^19.2.7
+      react: ^19.2.8
 
   react-refresh@0.18.0:
     resolution: {integrity: sha512-QgT5//D3jfjJb6Gsjxv0Slpj23ip+HtOpnNgnb2S5zU3CB26G/IDPGoy4RJB42wzFE46DRsstbW6tKHoKbhAxw==}
@@ -1156,12 +1156,12 @@ snapshots:
     dependencies:
       state-local: 1.0.7
 
-  '@monaco-editor/react@4.7.0(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@monaco-editor/react@4.7.0(monaco-editor@0.55.1)(react-dom@19.2.8(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@monaco-editor/loader': 1.7.0
       monaco-editor: 0.55.1
       react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
+      react-dom: 19.2.8(react@19.2.7)
 
   '@playwright/test@1.61.1':
     dependencies:
@@ -1287,7 +1287,7 @@ snapshots:
     dependencies:
       undici-types: 6.20.0
 
-  '@types/react-dom@19.2.3(@types/react@19.2.7)':
+  '@types/react-dom@19.2.4(@types/react@19.2.7)':
     dependencies:
       '@types/react': 19.2.7
 
@@ -1514,19 +1514,19 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.2
 
-  react-dom@19.2.7(react@19.2.7):
+  react-dom@19.2.8(react@19.2.7):
     dependencies:
       react: 19.2.7
       scheduler: 0.27.0
 
   react-refresh@0.18.0: {}
 
-  react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  react-router@8.3.0(react-dom@19.2.8(react@19.2.7))(react@19.2.7):
     dependencies:
       cookie-es: 3.1.1
       react: 19.2.7
     optionalDependencies:
-      react-dom: 19.2.7(react@19.2.7)
+      react-dom: 19.2.8(react@19.2.7)
 
   react@19.2.7: {}
 
