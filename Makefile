@@ -10,6 +10,7 @@ desktop:
 	wails dev
 
 test:
+	pnpm --dir frontend build
 	go test ./...
 	pnpm --dir frontend test
 
@@ -25,6 +26,7 @@ e2e:
 	pnpm --dir frontend e2e
 
 verify:
+	pnpm --dir frontend build
 	go test -race ./...
 	go vet ./...
 	go run golang.org/x/vuln/cmd/govulncheck@v1.6.0 ./...
