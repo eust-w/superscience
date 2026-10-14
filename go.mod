@@ -10,7 +10,7 @@ require (
 	github.com/creack/pty v1.1.24
 	github.com/google/jsonschema-go v0.4.2
 	github.com/gorilla/websocket v1.5.3
-	github.com/jackc/pgx/v5 v5.9.2
+	github.com/jackc/pgx/v5 v5.10.0
 	github.com/minio/minio-go/v7 v7.2.1
 	github.com/modelcontextprotocol/go-sdk v1.4.1
 	github.com/wailsapp/wails/v2 v2.12.0
