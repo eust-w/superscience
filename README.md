@@ -49,9 +49,9 @@ The connector count describes registered implementations. External services have
 
 </details>
 
-[![Watch the 81-second introduction](docs/readme/launch-poster.png)](https://x.com/eustancewu/status/2114581844570321022)
+[![Watch the 81-second introduction](docs/readme/launch-poster.png)](https://www.youtube.com/watch?v=l89Nk2juI5E)
 
-[Watch the 81-second introduction — X](https://x.com/eustancewu/status/2114581844570321022) · [抖音](https://www.douyin.com/video/7700838064293186851) · [小红书主页](https://www.xiaohongshu.com/user/profile/5c6f6397000000001103bb3f) · [Video source / 视频源码](media/launch/)
+[YouTube](https://www.youtube.com/watch?v=l89Nk2juI5E) · [Bilibili](https://www.bilibili.com/video/BV1oCn96NEnh/) · [X](https://x.com/eustancewu/status/2114581844570321022) · [Douyin](https://www.douyin.com/video/7700838064293186851) · [Xiaohongshu profile](https://www.xiaohongshu.com/user/profile/5c6f6397000000001103bb3f) · [Video source](media/launch/)
 
 [Download the 1080p / vertical films, subtitles and covers](https://github.com/eust-w/superscience/releases/tag/v0.1.0-alpha.1) — source and media prerelease; no signed desktop installers.
 
