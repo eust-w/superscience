@@ -51,7 +51,9 @@
 
 [![观看 81 秒项目介绍](docs/readme/launch-poster.png)](https://x.com/eustancewu/status/2114581844570321022)
 
-[观看 81 秒项目介绍 — X](https://x.com/eustancewu/status/2114581844570321022) · [Video source / 视频源码](media/launch/)
+[观看 81 秒项目介绍 — X](https://x.com/eustancewu/status/2114581844570321022) · [抖音](https://www.douyin.com/video/7700838064293186851) · [小红书主页](https://www.xiaohongshu.com/user/profile/5c6f6397000000001103bb3f) · [Video source / 视频源码](media/launch/)
+
+[下载横竖版视频、字幕和封面](https://github.com/eust-w/superscience/releases/tag/v0.1.0-alpha.1) · 当前为源码与媒体预览版，尚不包含签名桌面安装包。
 
 1. **检索。** 点击**打开本地工具**并打开项目，搜索科学数据源，核对记录与来源链接，再保存为产物。需要 AI 辅助时，再验证供应商和模型。
 2. **执行。** 在 Notebook 或终端中分析材料；网络、写入和执行操作出现权限请求时，先检查再批准。

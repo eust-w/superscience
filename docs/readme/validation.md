@@ -36,3 +36,7 @@ The README contains actual application captures. The launch film combines those 
 This prerelease distributes source and launch media. Native signed/notarized desktop packages, all-platform hardware acceptance, full live coverage of the 51 registered scientific connectors, and production Cloud deployment remain separate work. The GitHub updater ignores prereleases. Approved terminal, notebook and external-tool execution uses the current OS user's privileges; permission approval is not process isolation.
 
 See [the release process](../releasing.md) and [security policy](../../SECURITY.md) before distributing binaries or deploying the optional Cloud service.
+
+## Remote acceptance
+
+The release commit `3f55ef6` passed [GitHub CI](https://github.com/eust-w/superscience/actions/runs/40272256547) (Go, frontend/browser and production-contract jobs) and [Secret scan](https://github.com/eust-w/superscience/actions/runs/40272256538). The [source and media prerelease](https://github.com/eust-w/superscience/releases/tag/v0.1.0-alpha.1) includes both films, four cover formats, subtitles and a checksum manifest. Uploaded asset SHA-256 values match the inspected local files.

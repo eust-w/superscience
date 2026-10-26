@@ -51,7 +51,9 @@ The connector count describes registered implementations. External services have
 
 [![Watch the 81-second introduction](docs/readme/launch-poster.png)](https://x.com/eustancewu/status/2114581844570321022)
 
-[Watch the 81-second introduction — X](https://x.com/eustancewu/status/2114581844570321022) · [Video source / 视频源码](media/launch/)
+[Watch the 81-second introduction — X](https://x.com/eustancewu/status/2114581844570321022) · [抖音](https://www.douyin.com/video/7700838064293186851) · [小红书主页](https://www.xiaohongshu.com/user/profile/5c6f6397000000001103bb3f) · [Video source / 视频源码](media/launch/)
+
+[Download the 1080p / vertical films, subtitles and covers](https://github.com/eust-w/superscience/releases/tag/v0.1.0-alpha.1) — source and media prerelease; no signed desktop installers.
 
 1. **Investigate.** Choose **Open local tools**, open a project, then search a scientific source. Inspect the record and its source URL before saving it as an artifact. Verify a provider later when you want AI assistance.
 2. **Execute.** Use the notebook or terminal to analyze your material. Review permission requests before a network, write or execution action proceeds.
