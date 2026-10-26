@@ -4,7 +4,7 @@ go 1.26.10
 
 require (
 	github.com/coder/acp-go-sdk v0.13.5
-	github.com/coreos/go-oidc/v3 v3.19.0
+	github.com/coreos/go-oidc/v3 v3.20.0
 	github.com/creack/pty v1.1.24
 	github.com/google/jsonschema-go v0.4.2
 	github.com/gorilla/websocket v1.5.3
