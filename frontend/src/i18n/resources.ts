@@ -5,7 +5,7 @@ export const resources = {
     onboarding: {
       eyebrow: "Production scientific AI",
       title: "Configure a cloud provider",
-      intro: "Superscience runs only after a provider and model complete an authenticated verification request.",
+      intro: "AI chat requires a provider and model to complete an authenticated verification request. Local research tools are available separately.",
       providerStep: "Provider",
       providerStepDetail: "Select a supported cloud endpoint.",
       verifyStep: "Verify credentials",
@@ -13,9 +13,9 @@ export const resources = {
       systemStep: "System check",
       systemStepDetail: "Store the verified model selection.",
       workspaceStep: "Research workspace",
-      workspaceStepDetail: "Open projects after verification.",
+      workspaceStepDetail: "Add verified AI to your local projects.",
       security: "Keys are sent only to the selected provider and stored through the operating system credential service.",
-      requiredSetup: "Required setup",
+      requiredSetup: "Required for AI chat",
       connection: "Provider connection",
       required: "Required",
       provider: "Provider",
@@ -27,15 +27,17 @@ export const resources = {
       keyPlaceholder: "Stored after successful verification",
       verified: "Provider verified",
       failed: "Verification failed",
-      noGeneration: "No research content is generated until this check succeeds.",
-      continue: "Verify and continue"
+      noGeneration: "AI chat remains unavailable until this check succeeds.",
+      continue: "Verify and continue",
+      localTools: "Open local tools",
+      localToolsDetail: "Files, scientific search, and notebooks can be used without an AI provider."
     }
   },
   "zh-CN": {
     onboarding: {
       eyebrow: "生产级科研智能",
       title: "配置云端模型服务",
-      intro: "Superscience 仅在模型服务与模型完成真实鉴权请求后才会进入科研工作区。",
+      intro: "AI 对话需要模型服务与模型通过真实鉴权验证。本地科研工具可以独立使用。",
       providerStep: "模型服务",
       providerStepDetail: "选择受支持的云端服务。",
       verifyStep: "验证凭据",
@@ -43,9 +45,9 @@ export const resources = {
       systemStep: "系统检查",
       systemStepDetail: "保存已验证的模型选择。",
       workspaceStep: "科研工作区",
-      workspaceStepDetail: "验证成功后打开本地项目。",
+      workspaceStepDetail: "为本地项目接入已验证的 AI。",
       security: "密钥仅发送给所选模型服务，并通过操作系统凭据服务存储。",
-      requiredSetup: "必需配置",
+      requiredSetup: "AI 对话所需配置",
       connection: "模型服务连接",
       required: "必填",
       provider: "模型服务",
@@ -57,8 +59,10 @@ export const resources = {
       keyPlaceholder: "验证成功后安全存储",
       verified: "模型服务已验证",
       failed: "验证失败",
-      noGeneration: "检查成功前不会生成任何科研内容。",
-      continue: "验证并继续"
+      noGeneration: "验证成功前，AI 对话保持不可用。",
+      continue: "验证并继续",
+      localTools: "打开本地工具",
+      localToolsDetail: "无需配置 AI 服务，也可使用文件、科学检索和 Notebook。"
     }
   }
 } as const;

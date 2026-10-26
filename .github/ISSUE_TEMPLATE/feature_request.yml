@@ -1,0 +1,38 @@
+name: Feature request
+description: Propose an improvement to a research workflow.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe a concrete research workflow and the improvement you need.
+        Use public or synthetic examples; do not include credentials or unpublished research data.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: Who needs this, what are they trying to do, and where does the current workflow fall short?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed behavior
+      description: Describe the user-visible result. Include an example input and expected output if useful.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe existing tools, workarounds or other approaches you considered.
+  - type: textarea
+    id: validation
+    attributes:
+      label: How would we validate it?
+      description: Suggest a reproducible acceptance check. Identify external services, credentials, kernels, datasets or permissions it would require; distinguish proposed behavior from results already observed.
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Link relevant public documentation, examples or related issues.

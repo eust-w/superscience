@@ -1,0 +1,34 @@
+{
+  "narration": "macOS Tingting synthetic speech; no voice cloning",
+  "music": null,
+  "screenshots": [
+    {
+      "source": "docs/readme/setup.jpg",
+      "staged": "public/screenshots/setup.jpg",
+      "sha256": "e6e509110f96357a9ae45c5f99b416dc1c0ae111301ee170230b71bac6a3d9e9",
+      "kind": "genuine product screenshot",
+      "notes": "Provider configuration interface"
+    },
+    {
+      "source": "docs/readme/video-notebook.jpg",
+      "staged": "public/screenshots/notebook.jpg",
+      "sha256": "ebd6ba1275fb60d79f1196a025a91bfe9dfba5f91a55e8c85a6b5a86a4e27f8a",
+      "kind": "genuine product screenshot",
+      "notes": "Synthetic dataset; local Jupyter execution; not a performance benchmark"
+    },
+    {
+      "source": "docs/readme/search.jpg",
+      "staged": "public/screenshots/search.jpg",
+      "sha256": "2b60a14a07ff6c3200b3d61b49034d97f92f4f5ee231599cc4df05107c137ffa",
+      "kind": "genuine product screenshot",
+      "notes": "Real Crossref request, not a model-generated result"
+    },
+    {
+      "source": "docs/readme/artifacts.jpg",
+      "staged": "public/screenshots/artifacts.jpg",
+      "sha256": "e4f86227902c1119912f1644c15ad31cfbfd5a1bf0694e3582868c690468e7ee",
+      "kind": "genuine product screenshot",
+      "notes": "Local share, not a public Cloud deployment"
+    }
+  ]
+}

@@ -8,6 +8,8 @@ export function AgentsPanel(props: {
   toolsCatalog: ToolDefinition[];
   providers: ProviderProfile[];
   settings: SettingsValues;
+  aiReady: boolean;
+  onConfigureProvider: () => void;
   activeSession: Session | null;
   onRefresh: () => Promise<void>;
 }) {
@@ -81,8 +83,10 @@ export function AgentsPanel(props: {
 
   const selectedAgent = useMemo(() => enabledAgents.find((agent) => agent.id === agentId), [agentId, enabledAgents]);
 
+  const selectionReady = props.aiReady && providerId === props.settings.defaultProvider && modelId === props.settings.defaultModel;
+
   async function runAgent() {
-    if (!props.activeSession || !goal.trim() || !agentId || !providerId || !modelId) return;
+    if (!selectionReady || running || !props.activeSession || !goal.trim() || !agentId || !providerId || !modelId) return;
     setRunning(true);
     setError("");
     setEvents([]);
@@ -183,10 +187,11 @@ export function AgentsPanel(props: {
         <textarea value={goal} onChange={(event) => setGoal(event.target.value)} placeholder="Research objective" />
         <div className="panel-action-row">
           <span className="muted">{selectedAgent ? `${selectedAgent.reviewMode} review · ${selectedAgent.tools.length} tools` : "No agent available"}</span>
-          <button className="primary" onClick={() => void runAgent()} disabled={running || !props.activeSession || !goal.trim() || !providerId || !modelId}>
+          <button className="primary" onClick={() => void runAgent()} disabled={!selectionReady || running || !props.activeSession || !goal.trim() || !agentId || !providerId || !modelId}>
             <Power size={13} /> {running ? "Running" : "Run"}
           </button>
         </div>
+        {!selectionReady ? <div className="panel-error" role="status"><AlertTriangle size={14} /><span>Verify the selected provider and model as your default before running an agent.</span><button type="button" className="secondary" onClick={props.onConfigureProvider}>Verify agent provider</button></div> : null}
         {error ? <div className="panel-error" role="alert"><AlertTriangle size={14} /> {error}</div> : null}
       </section>
       <section className="run-timeline" aria-live="polite">

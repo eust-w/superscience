@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="820" viewBox="0 0 1440 820" role="img" aria-label="Superscience architecture diagram"><rect width="1440" height="820" rx="28" fill="#101e30"/><g font-family="Inter,Segoe UI,Arial,sans-serif">
+<text x="64" y="66" font-size="15" fill="#79d6df">SUPERSCIENCE / SYSTEM OVERVIEW</text>
+<text x="64" y="125" font-size="40" fill="#f5f8fc">Your research. A traceable workflow.</text>
+<text x="64" y="165" font-size="20" fill="#b6cadd">Local projects and evidence, with explicit connections to external services.</text>
+<rect x="64" y="205" width="930" height="525" rx="22" fill="#0b1524" stroke="#42647c" stroke-dasharray="6 6"/>
+<text x="88" y="238" font-size="14" fill="#79d6df">YOUR MACHINE · LOCALHOST</text>
+<rect x="88" y="265" width="420" height="100" rx="16" fill="#193047" stroke="#416078"/>
+<text x="112" y="305" font-size="24" fill="#eff8ff">React workspace</text>
+<text x="112" y="338" font-size="17" fill="#b6cadd">Browser or Wails desktop shell</text>
+<rect x="550" y="265" width="420" height="100" rx="16" fill="#193047" stroke="#416078"/>
+<text x="574" y="305" font-size="24" fill="#eff8ff">CLI / ACP</text>
+<text x="574" y="338" font-size="17" fill="#b6cadd">Terminal and editor integration</text>
+<rect x="88" y="410" width="882" height="110" rx="16" fill="#193047" stroke="#416078"/>
+<text x="112" y="450" font-size="24" fill="#eff8ff">Go runtime + permission gates</text>
+<text x="112" y="483" font-size="17" fill="#b6cadd">Sessions · model adapters · tool execution · audit events</text>
+<rect x="88" y="565" width="274" height="100" rx="16" fill="#193047" stroke="#416078"/>
+<text x="112" y="605" font-size="24" fill="#eff8ff">Scientific search</text>
+<text x="112" y="638" font-size="17" fill="#b6cadd">Source-linked results</text>
+<rect x="392" y="565" width="274" height="100" rx="16" fill="#193047" stroke="#416078"/>
+<text x="416" y="605" font-size="24" fill="#eff8ff">Files + execution</text>
+<text x="416" y="638" font-size="17" fill="#b6cadd">PTY · Jupyter · LSP</text>
+<rect x="696" y="565" width="274" height="100" rx="16" fill="#193047" stroke="#416078"/>
+<text x="720" y="605" font-size="24" fill="#eff8ff">SQLite evidence</text>
+<text x="720" y="638" font-size="17" fill="#b6cadd">Artifacts · provenance</text>
+<rect x="1052" y="265" width="324" height="110" rx="16" fill="#193047" stroke="#416078"/>
+<text x="1076" y="305" font-size="24" fill="#eff8ff">Model providers</text>
+<text x="1076" y="338" font-size="17" fill="#b6cadd">Configure and verify your model</text>
+<rect x="1052" y="420" width="324" height="110" rx="16" fill="#193047" stroke="#416078"/>
+<text x="1076" y="460" font-size="24" fill="#eff8ff">Scientific databases</text>
+<text x="1076" y="493" font-size="17" fill="#b6cadd">Approved network requests</text>
+<rect x="1052" y="575" width="324" height="110" rx="16" fill="#193047" stroke="#416078"/>
+<text x="1076" y="615" font-size="24" fill="#eff8ff">Self-hosted Cloud</text>
+<text x="1076" y="648" font-size="17" fill="#b6cadd">Optional · OIDC / Postgres / S3</text>
+<path d="M298 365V410m-5 -8 5 8 5 -8" fill="none" stroke="#7cd3df" stroke-width="2"/>
+<path d="M760 365V410m-5 -8 5 8 5 -8" fill="none" stroke="#7cd3df" stroke-width="2"/>
+<path d="M225 520V565m-5 -8 5 8 5 -8" fill="none" stroke="#7cd3df" stroke-width="2"/>
+<path d="M529 520V565m-5 -8 5 8 5 -8" fill="none" stroke="#7cd3df" stroke-width="2"/>
+<path d="M833 520V565m-5 -8 5 8 5 -8" fill="none" stroke="#7cd3df" stroke-width="2"/>
+<path d="M970 450h40V320h42M970 470h82M970 490h40v140h42" fill="none" stroke="#7cd3df" stroke-width="2"/>
+<text x="88" y="705" font-size="16" fill="#b6cadd">Credentials: macOS keychain or environment, depending on runtime path.</text>
+<text x="64" y="782" font-size="16" fill="#8eaec5">Architecture diagram · Permission checks are not an operating-system sandbox.</text>
+</g></svg>

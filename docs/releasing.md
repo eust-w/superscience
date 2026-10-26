@@ -41,7 +41,7 @@ git tag v0.1.0
 git push origin v0.1.0
 ```
 
-The Release workflow validates the project, cross-builds CLI archives, builds Wails on native macOS/Windows/Linux runners, verifies checksums, and creates a draft GitHub Release. A rerun updates the draft assets with `--clobber`.
+The Release workflow validates the project, cross-builds CLI archives, builds Wails on native macOS/Windows/Linux runners, verifies checksums, and creates a draft GitHub Release. A rerun updates draft assets with `--clobber`. The workflow refuses to modify assets on an already published release.
 
 ## Sign and Publish
 
@@ -56,3 +56,7 @@ The updater uses GitHub's latest **published** release endpoint, so drafts and p
 ## Rollback
 
 If a published release is unsafe, mark it unavailable immediately and publish a fixed higher semantic version. Do not silently replace a published executable while retaining the old checksum. Preserve the affected assets and audit evidence privately for incident review.
+
+## Source and media previews
+
+A prerelease may contain only GitHub source archives and inspected launch media. Its notes must explicitly state that it contains no signed desktop packages. Publish it against the reviewed commit and include SHA-256 checksums for media assets. The native build workflow must not attach unreviewed binaries to an already published preview. Prereleases remain excluded from automatic updater targets.

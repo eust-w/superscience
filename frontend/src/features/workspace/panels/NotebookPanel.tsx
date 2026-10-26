@@ -1,4 +1,4 @@
-import Editor from "@monaco-editor/react";
+import Editor, { localEditorOptions } from "../../../lib/localEditor";
 import { AlertTriangle, BookOpen, CircleStop, Code2, Download, Play, RefreshCw, RotateCcw } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type {
@@ -172,7 +172,7 @@ export function NotebookPanel(props: {
               value={source}
               onChange={(value) => setSource(value ?? "")}
               theme={document.documentElement.dataset.theme === "dark" ? "vs-dark" : "light"}
-              options={{ minimap: { enabled: false }, fontSize: 12, lineNumbersMinChars: 3, scrollBeyondLastLine: false, automaticLayout: true }}
+              options={{ ...localEditorOptions, minimap: { enabled: false }, fontSize: 12, lineNumbersMinChars: 3, scrollBeyondLastLine: false, automaticLayout: true }}
             />
           </div>
           <div className="panel-action-row">
@@ -205,7 +205,7 @@ export function NotebookPanel(props: {
               value={lspSource}
               onChange={(value) => setLspSource(value ?? "")}
               theme={document.documentElement.dataset.theme === "dark" ? "vs-dark" : "light"}
-              options={{ minimap: { enabled: false }, fontSize: 12, lineNumbersMinChars: 3, scrollBeyondLastLine: false, automaticLayout: true }}
+              options={{ ...localEditorOptions, minimap: { enabled: false }, fontSize: 12, lineNumbersMinChars: 3, scrollBeyondLastLine: false, automaticLayout: true }}
             />
           </div>
           <Diagnostics diagnostics={lspResult?.diagnostics ?? []} />

@@ -57,6 +57,8 @@ export function Workspace(props: {
   lspSessions: LSPSession[];
   artifacts: Artifact[];
   settings: SettingsValues;
+  aiReady: boolean;
+  onConfigureProvider: () => void;
   onActivateSession: (session: Session) => Promise<void>;
   onNewSession: () => Promise<void>;
   onSendMessage: (content: string) => Promise<void>;
@@ -71,7 +73,7 @@ export function Workspace(props: {
 
   async function submit() {
     const content = prompt.trim();
-    if (!content || sending) return;
+    if (!content || sending || !props.aiReady) return;
     setSending(true);
     setSendError("");
     try {
@@ -134,6 +136,13 @@ export function Workspace(props: {
           ))}
         </div>
         {sendError ? <div className="composer-error" role="alert"><AlertTriangle size={14} />{sendError}</div> : null}
+        {!props.aiReady ? (
+          <div className="composer-error" role="status">
+            <AlertTriangle size={14} />
+            <span>AI chat is unavailable until a provider and model pass verification.</span>
+            <button className="secondary" type="button" onClick={props.onConfigureProvider}>Configure AI provider</button>
+          </div>
+        ) : null}
         <div className="composer">
           <span className="composer-agent"><Bot size={14} />{props.activeSession?.agent || "research"}</span>
           <textarea
@@ -146,8 +155,9 @@ export function Workspace(props: {
               }
             }}
             placeholder="Ask Superscience"
+            disabled={!props.aiReady}
           />
-          <button className="primary send" aria-label="Send message" onClick={() => void submit()} disabled={sending || !prompt.trim()}>
+          <button className="primary send" aria-label="Send message" onClick={() => void submit()} disabled={!props.aiReady || sending || !prompt.trim()}>
             {sending ? <LoaderCircle className="spin" size={16} /> : <Send size={16} />}
           </button>
         </div>
@@ -174,8 +184,8 @@ function RightPane(props: Parameters<typeof Workspace>[0] & { active: RightTab; 
       <Suspense fallback={<div className="panel-loading"><LoaderCircle className="spin" size={16} />Loading tool...</div>}>
         {props.active === "files" ? <FilesPanel session={props.activeSession} onRefresh={props.onRefreshEcosystem} /> : null}
         {props.active === "terminal" ? <TerminalPanel session={props.activeSession} onRefresh={props.onRefreshEcosystem} /> : null}
-        {props.active === "science" ? <SciencePanel databases={props.databases} session={props.activeSession} onSend={props.onSendMessage} onArtifactCreated={props.onRefreshEcosystem} /> : null}
-        {props.active === "agents" ? <AgentsPanel agents={props.agents} toolsCatalog={props.toolsCatalog} providers={props.providers} settings={props.settings} activeSession={props.activeSession} onRefresh={props.onRefreshEcosystem} /> : null}
+        {props.active === "science" ? <SciencePanel databases={props.databases} session={props.activeSession} onSend={async (content) => { if (!props.aiReady) { props.onConfigureProvider(); return; } await props.onSendMessage(content); }} onArtifactCreated={props.onRefreshEcosystem} /> : null}
+        {props.active === "agents" ? <AgentsPanel aiReady={props.aiReady} onConfigureProvider={props.onConfigureProvider} agents={props.agents} toolsCatalog={props.toolsCatalog} providers={props.providers} settings={props.settings} activeSession={props.activeSession} onRefresh={props.onRefreshEcosystem} /> : null}
         {props.active === "ecosystem" ? <EcosystemPanel providers={props.providers} skills={props.skills} mcpServers={props.mcpServers} plugins={props.plugins} artifacts={props.artifacts} settings={props.settings} activeSession={props.activeSession} onRefresh={props.onRefreshEcosystem} /> : null}
         {props.active === "notebook" ? <NotebookPanel notebooks={props.notebooks} lspSessions={props.lspSessions} activeSession={props.activeSession} onRefresh={props.onRefreshEcosystem} /> : null}
       </Suspense>

@@ -3,6 +3,8 @@ package notebook_test
 import (
 	"context"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -59,21 +61,42 @@ func TestManagerPreservesPythonStateAcrossCells(t *testing.T) {
 
 func TestManagerInterruptStopsRunningKernelAndAllowsFreshSession(t *testing.T) {
 	manager := notebook.NewManager()
-	t.Cleanup(func() { manager.Close() })
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	startedPath := filepath.Join(t.TempDir(), "cell-started")
+	t.Cleanup(func() {
+		cancel()
+		manager.Close()
+	})
 	resultCh := make(chan error, 1)
 	go func() {
-		_, err := manager.RunCell(context.Background(), store.NotebookCell{
+		_, err := manager.RunCell(ctx, store.NotebookCell{
 			ID:         "cell_sleep",
 			NotebookID: "notebook_interrupt",
 			Kind:       "code",
 			Language:   "python",
-			Source:     "import time\ntime.sleep(30)",
+			Source:     fmt.Sprintf("from pathlib import Path\nimport time\nPath(%q).write_text('started')\ntime.sleep(30)", startedPath),
 		})
 		resultCh <- err
 	}()
-	deadline := time.Now().Add(5 * time.Second)
-	for manager.Status("notebook_interrupt", "python").Status != "running" && time.Now().Before(deadline) {
-		time.Sleep(50 * time.Millisecond)
+	// Wait for the cell itself to start, separately from the interrupt deadline.
+	// A running kernel can still be importing its environment on a cold CI host.
+	readyDeadline := time.NewTimer(30 * time.Second)
+	defer readyDeadline.Stop()
+	poll := time.NewTicker(50 * time.Millisecond)
+	defer poll.Stop()
+	for {
+		if _, err := os.Stat(startedPath); err == nil {
+			break
+		}
+		select {
+		case err := <-resultCh:
+			t.Fatalf("cell returned before interrupt: %v", err)
+		case <-readyDeadline.C:
+			t.Fatal("cell did not start within the kernel readiness deadline")
+		case <-ctx.Done():
+			t.Fatal(ctx.Err())
+		case <-poll.C:
+		}
 	}
 	if manager.Status("notebook_interrupt", "python").Status != "running" {
 		t.Fatal("kernel did not enter running state")
@@ -89,7 +112,7 @@ func TestManagerInterruptStopsRunningKernelAndAllowsFreshSession(t *testing.T) {
 	case <-time.After(4 * time.Second):
 		t.Fatal("kernel execution did not stop after interrupt")
 	}
-	fresh, err := manager.RunCell(context.Background(), store.NotebookCell{
+	fresh, err := manager.RunCell(ctx, store.NotebookCell{
 		ID:         "cell_fresh",
 		NotebookID: "notebook_interrupt",
 		Kind:       "code",

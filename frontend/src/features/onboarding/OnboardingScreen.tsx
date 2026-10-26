@@ -32,6 +32,7 @@ type Props = {
   initialError?: string;
   loadModels: (providerId: string) => Promise<ModelProfile[]>;
   onVerify: (input: ProviderSetupInput) => Promise<ProviderVerificationResult>;
+  onOpenLocalTools?: () => void;
 };
 
 export function OnboardingScreen(_props: Props) {
@@ -168,6 +169,10 @@ export function OnboardingScreen(_props: Props) {
 			  {copy.continue}
               <ArrowRight size={15} />
             </button>
+          </div>
+          <div className="onboarding-actions">
+            <p>{copy.localToolsDetail}</p>
+            <button className="secondary" type="button" disabled={!_props.onOpenLocalTools || verifying} onClick={_props.onOpenLocalTools}>{copy.localTools}</button>
           </div>
         </section>
       </div>

@@ -1,0 +1,56 @@
+name: Bug report
+description: Report a reproducible problem in Superscience.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Superscience. Search existing issues before submitting.
+        Remove API keys, tokens, private research data, personal file paths and credentials from logs or screenshots.
+        For vulnerabilities, follow the [security policy](https://github.com/eust-w/superscience/blob/HEAD/SECURITY.md) instead of opening a public issue.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the problem and the workflow it interrupts.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include the smallest reproducible example using public or synthetic data.
+      placeholder: |
+        1. Start Superscience with ...
+        2. Open ...
+        3. Run ...
+        4. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should happen instead?
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include only the components relevant to the problem. Do not include credentials or private endpoint URLs.
+      value: |
+        - Superscience version or commit:
+        - Operating system and architecture:
+        - Interface (browser / desktop / CLI / ACP):
+        - Browser version, if applicable:
+        - Go / Node.js / pnpm versions, if building from source:
+        - Provider and model, if applicable:
+        - Notebook kernel or language server, if applicable:
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs, screenshots or additional context
+      description: Paste redacted errors and explain whether the behavior uses a real external service or a local test fixture.

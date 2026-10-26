@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/eust-w/superscience/blob/HEAD/SECURITY.md
+    about: Follow the private reporting instructions; do not disclose vulnerabilities or secrets in public issues.
+  - name: Getting started
+    url: https://github.com/eust-w/superscience/blob/HEAD/docs/getting-started.md
+    about: Check installation, provider setup and optional notebook requirements.

@@ -336,12 +336,29 @@ func TestACPCLIWaitsForFinalResponseWriteBeforeReturning(t *testing.T) {
 	request := strings.NewReader("{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":1,\"clientCapabilities\":{}}}\n")
 	output := &blockingACPWriter{started: make(chan struct{}), release: make(chan struct{})}
 	done := make(chan error, 1)
+	finished := make(chan struct{})
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	var releaseOnce sync.Once
+	releaseOutput := func() { releaseOnce.Do(func() { close(output.release) }) }
+	t.Cleanup(func() {
+		releaseOutput()
+		cancel()
+		select {
+		case <-finished:
+		case <-time.After(5 * time.Second):
+			t.Error("ACP did not stop during cleanup")
+		}
+	})
 	go func() {
-		done <- handleACP(context.Background(), nil, request, output, io.Discard)
+		defer close(finished)
+		done <- handleACP(ctx, nil, request, output, io.Discard)
 	}()
 	select {
 	case <-output.started:
-	case <-time.After(time.Second):
+	case err := <-done:
+		t.Fatalf("ACP returned before attempting the initialize response: %v", err)
+	case <-time.After(10 * time.Second):
+		// SQLite cold-start time is independent of the response-draining contract.
 		t.Fatal("ACP never attempted the initialize response")
 	}
 	select {
@@ -349,13 +366,13 @@ func TestACPCLIWaitsForFinalResponseWriteBeforeReturning(t *testing.T) {
 		t.Fatalf("ACP returned before the response write completed: %v", err)
 	case <-time.After(50 * time.Millisecond):
 	}
-	close(output.release)
+	releaseOutput()
 	select {
 	case err := <-done:
 		if err != nil {
 			t.Fatal(err)
 		}
-	case <-time.After(time.Second):
+	case <-time.After(5 * time.Second):
 		t.Fatal("ACP did not return after the response write completed")
 	}
 }

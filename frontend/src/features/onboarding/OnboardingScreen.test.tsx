@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { OnboardingScreen } from "./OnboardingScreen";
 
 describe("OnboardingScreen", () => {
-  it("renders provider-required setup without demo or mock choices", () => {
+  it("requires verification for AI and disables local tools without a healthy-server action", () => {
     const html = renderToStaticMarkup(
       <OnboardingScreen
         providers={[
@@ -25,9 +25,23 @@ describe("OnboardingScreen", () => {
 
     expect(html).toContain("Configure a cloud provider");
     expect(html).toContain("Verify and continue");
+    expect(html).toMatch(/<button[^>]+disabled=""[^>]*>Open local tools<\/button>/);
     expect(html.toLowerCase()).not.toContain("mock");
     expect(html.toLowerCase()).not.toContain("demo");
     expect(html.toLowerCase()).not.toContain("example");
+  });
+
+  it("offers local tools independently of an unconfigured provider", () => {
+    const html = renderToStaticMarkup(
+      <OnboardingScreen
+        providers={[]}
+        loadModels={async () => []}
+        onVerify={async () => ({ ok: false, status: "unconfigured", message: "Not configured" })}
+        onOpenLocalTools={() => {}}
+      />
+    );
+    expect(html).toContain("Files, scientific search, and notebooks can be used without an AI provider.");
+    expect(html).toMatch(/<button(?![^>]*disabled)[^>]*>Open local tools<\/button>/);
   });
 
   it("prefers OpenAI when the provider registry is alphabetically ordered", () => {

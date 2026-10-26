@@ -1,0 +1,31 @@
+{
+  "name": "superscience-launch-video",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts --port=3107 --no-open",
+    "typecheck": "tsc --noEmit",
+    "prepare:assets": "python3 scripts/prepare_assets.py",
+    "render:landscape": "remotion render src/index.ts Landscape ../../.qa/video/superscience-launch-1080p.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --concurrency=2 && python3 scripts/normalize_export.py ../../.qa/video/superscience-launch-1080p.mp4",
+    "render:portrait": "remotion render src/index.ts Portrait ../../.qa/video/superscience-launch-vertical.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --concurrency=2 && python3 scripts/normalize_export.py ../../.qa/video/superscience-launch-vertical.mp4",
+    "verify:exports": "python3 scripts/verify_exports.py",
+    "render:posters": "remotion still src/index.ts PosterLandscape ../../.qa/video/poster-landscape.png && remotion still src/index.ts PosterPortrait ../../.qa/video/poster-portrait.png",
+    "render:social-covers": "remotion still src/index.ts PosterThreeFour ../../.qa/video/poster-3x4.png && remotion still src/index.ts PosterFourThree ../../.qa/video/poster-4x3.png"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.538",
+    "@remotion/media": "4.0.538",
+    "@remotion/captions": "4.0.538",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "remotion": "4.0.538"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/react": "19.2.7"
+  },
+  "overrides": {
+    "zod": "4.6.6"
+  }
+}

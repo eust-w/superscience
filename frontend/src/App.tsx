@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { AlertTriangle } from "lucide-react";
 import type {
@@ -29,6 +29,7 @@ import { Workspace } from "./features/workspace/Workspace";
 import { SettingsDialog } from "./features/settings/SettingsDialog";
 
 type View = "onboarding" | "launcher" | "workspace";
+type VerifiedSelection = { provider: string; model: string; generation: number };
 
 export function App() {
   const location = useLocation();
@@ -58,9 +59,49 @@ export function App() {
   const [settings, setSettings] = useState<SettingsValues>(defaultSettings);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [dark, setDark] = useState(false);
+  const localToolsRequested = useRef(false);
+  const settingsRef = useRef<SettingsValues>(defaultSettings);
+  const providerGeneration = useRef(0);
+  const [verifiedSelection, setVerifiedSelection] = useState<VerifiedSelection | null>(null);
+  const aiReady = health === "ready" && providerStatus === "ready" && verifiedSelection !== null
+    && verifiedSelection.generation === providerGeneration.current
+    && verifiedSelection.provider === settings.defaultProvider && verifiedSelection.model === settings.defaultModel;
+
+  function applySettings(values: SettingsValues) {
+    settingsRef.current = values;
+    setSettings(values);
+  }
+
+  function beginProviderVerification() {
+    const generation = ++providerGeneration.current;
+    setVerifiedSelection(null);
+    setProviderStatus("checking");
+    return generation;
+  }
+
+  async function checkProvider(provider: string, model: string, generation: number) {
+    const result = await client.providerHealth(provider, model);
+    if (generation !== providerGeneration.current) return null;
+    const ready = result.ok && result.status === "ready";
+    setProviderStatus(ready ? "ready" : "error");
+    setVerifiedSelection(ready ? { provider, model, generation } : null);
+    setStartupError(ready ? "" : result.message ?? "Provider verification failed.");
+    return result;
+  }
 
   function setView(next: View) {
     navigate(next === "workspace" ? "/workspace" : next === "launcher" ? "/projects" : "/onboarding", { replace: true });
+  }
+
+  function openLocalTools() {
+    if (health !== "ready") return;
+    localToolsRequested.current = true;
+    setView("launcher");
+  }
+
+  function configureProvider() {
+    localToolsRequested.current = false;
+    setView("onboarding");
   }
 
   useEffect(() => {
@@ -80,6 +121,7 @@ export function App() {
   }, []);
 
   async function initialize() {
+    const generation = beginProviderVerification();
     setStartupError("");
     try {
       await client.health();
@@ -91,10 +133,16 @@ export function App() {
       return;
     }
 
+    void refreshHome().catch(reportEcosystemError);
+    void refreshEcosystem().catch(reportEcosystemError);
+    void client.listScienceDatabases().then(setDatabases).catch(reportEcosystemError);
+    void client.listPermissions().then(setPermissions).catch(reportEcosystemError);
+
     try {
       const [values, providerRows, credentialRows] = await Promise.all([client.listSettings(), client.listProviders(), client.listCredentials()]);
+      if (generation !== providerGeneration.current) return;
       const merged = { ...defaultSettings, ...values };
-      setSettings(merged);
+      applySettings(merged);
       setProviders(providerRows);
       setCredentials(credentialRows);
       setDark(merged.themePreference === "dark");
@@ -103,24 +151,21 @@ export function App() {
       const modelID = merged.defaultModel ?? "";
       let status = "unconfigured";
       if (providerID && modelID) {
-        const result = await client.providerHealth(providerID, modelID);
-        status = result.status;
-        if (!result.ok) setStartupError(result.message ?? `Provider health is ${result.status}.`);
+        const result = await checkProvider(providerID, modelID, generation);
+        if (!result) return;
+        status = result.ok && result.status === "ready" ? "ready" : "error";
       } else {
-        setStartupError("Configure and verify a cloud provider before opening a research workspace.");
+        setStartupError("Configure and verify a provider to enable AI chat, or open local tools.");
       }
       setProviderStatus(status);
-      setView(deriveStartupRoute({ serverStatus: "ready", providerId: providerID, modelId: modelID, providerStatus: status }));
+      if (!localToolsRequested.current) setView(deriveStartupRoute({ serverStatus: "ready", providerId: providerID, modelId: modelID, providerStatus: status }));
     } catch (error) {
+      if (generation !== providerGeneration.current) return;
       setProviderStatus("error");
       setStartupError(error instanceof Error ? error.message : "Provider readiness check failed.");
-      setView("onboarding");
+      if (!localToolsRequested.current) setView("onboarding");
     }
 
-    void refreshHome().catch(reportEcosystemError);
-    void refreshEcosystem().catch(reportEcosystemError);
-    void client.listScienceDatabases().then(setDatabases).catch(reportEcosystemError);
-    void client.listPermissions().then(setPermissions).catch(reportEcosystemError);
   }
 
   function reportEcosystemError(error: unknown) {
@@ -158,26 +203,46 @@ export function App() {
   }
 
   async function verifyProvider(input: ProviderSetupInput): Promise<ProviderVerificationResult> {
-    const probe = await client.testCredential(input);
-    if (!probe.ok) return probe;
-    const profile = providers.find((item) => item.id === input.provider);
-    if (!profile) return { ok: false, status: "unsupported", message: "Selected provider is not registered." };
+    const generation = beginProviderVerification();
+    const superseded = (): ProviderVerificationResult => ({ ok: false, status: "error", message: "Provider selection changed. Verify the current selection again." });
+    try {
+      const probe = await client.testCredential(input);
+      if (generation !== providerGeneration.current) return superseded();
+      if (!probe.ok || probe.status !== "ready") {
+        setProviderStatus("error");
+        setStartupError(probe.message);
+        return { ...probe, ok: false };
+      }
+      const profile = providers.find((item) => item.id === input.provider);
+      if (!profile) {
+        setProviderStatus("error");
+        return { ok: false, status: "unsupported", message: "Selected provider is not registered." };
+      }
+      await client.saveProvider({ ...profile, baseURL: input.endpoint || profile.baseURL, enabled: true, secretRef: "" });
+      if (generation !== providerGeneration.current) return superseded();
+      const credential = await client.addCredential({ provider: input.provider, label: profile.displayName, key: input.key, source: "keychain" });
+      if (generation !== providerGeneration.current) return superseded();
+      setCredentials((current) => [credential, ...current.filter((item) => item.provider !== credential.provider)]);
+      const saved = await client.updateSettings({ defaultProvider: input.provider, defaultModel: input.model, scienceNetwork: "live-only" });
+      if (generation !== providerGeneration.current) return superseded();
+      applySettings({ ...settingsRef.current, ...saved });
 
-    await client.saveProvider({ ...profile, baseURL: input.endpoint || profile.baseURL, enabled: true, secretRef: "" });
-    const credential = await client.addCredential({ provider: input.provider, label: profile.displayName, key: input.key, source: "keychain" });
-    setCredentials((current) => [credential, ...current.filter((item) => item.provider !== credential.provider)]);
-    const saved = await client.updateSettings({ defaultProvider: input.provider, defaultModel: input.model, scienceNetwork: "live-only" });
-    setSettings((current) => ({ ...current, ...saved }));
-
-    const persistedProbe = await client.providerHealth(input.provider, input.model);
-    setProviderStatus(persistedProbe.status);
-    if (!persistedProbe.ok) {
-      return { ok: false, status: persistedProbe.status, message: persistedProbe.message ?? "Stored credentials could not be verified.", model: input.model, latencyMs: persistedProbe.latencyMs };
+      const persistedProbe = await checkProvider(input.provider, input.model, generation);
+      if (!persistedProbe) return superseded();
+      if (!persistedProbe.ok || persistedProbe.status !== "ready") {
+        return { ok: false, status: persistedProbe.status, message: persistedProbe.message ?? "Stored credentials could not be verified.", model: input.model, latencyMs: persistedProbe.latencyMs };
+      }
+      setView("launcher");
+      await Promise.all([refreshHome(), refreshEcosystem()]);
+      return { ok: true, status: "ready", message: `Verified ${profile.displayName} with ${input.model}.`, model: input.model, latencyMs: persistedProbe.latencyMs };
+    } catch (error) {
+      if (generation === providerGeneration.current) {
+        setProviderStatus("error");
+        setVerifiedSelection(null);
+        setStartupError(error instanceof Error ? error.message : "Provider verification failed.");
+      }
+      throw error;
     }
-    setStartupError("");
-    setView("launcher");
-    await Promise.all([refreshHome(), refreshEcosystem()]);
-    return { ok: true, status: "ready", message: `Verified ${profile.displayName} with ${input.model}.`, model: input.model, latencyMs: persistedProbe.latencyMs };
   }
 
   async function openProject(path: string) {
@@ -209,6 +274,8 @@ export function App() {
   }
 
   async function sendMessage(content: string) {
+    if (!aiReady || verifiedSelection?.generation !== providerGeneration.current) throw new Error("AI chat is unavailable until a provider and model pass verification.");
+    const selection = verifiedSelection;
     if (!activeProject) throw new Error("Open a project before sending a message.");
     let session = activeSession;
     if (!session) {
@@ -216,6 +283,7 @@ export function App() {
       setSessions((current) => [session!, ...current]);
       setActiveSession(session);
     }
+    if (selection.generation !== providerGeneration.current) throw new Error("Provider selection changed. Verify it before sending a message.");
     const draftID = `draft_${Date.now()}`;
     let draft = "";
     let streamError = "";
@@ -239,7 +307,7 @@ export function App() {
         if (event.type === "permission" && event.permission) {
           setPermissions((current) => [event.permission!, ...current.filter((item) => item.id !== event.permission!.id)]);
         }
-      }, { provider: settings.defaultProvider, model: settings.defaultModel, agent: session.agent });
+      }, { provider: selection.provider, model: selection.model, agent: session.agent });
     } finally {
       setMessages(await client.listMessages(session.id));
     }
@@ -247,9 +315,43 @@ export function App() {
   }
 
   async function updateSetting(key: string, value: string) {
-    const saved = await client.updateSettings({ [key]: value });
-    setSettings((current) => ({ ...current, ...saved }));
-    if (key === "themePreference") setDark(value === "dark");
+    const changesProvider = key === "defaultProvider" || key === "defaultModel";
+    const generation = changesProvider ? beginProviderVerification() : providerGeneration.current;
+    try {
+      const saved = await client.updateSettings({ [key]: value });
+      if (changesProvider && generation !== providerGeneration.current) return;
+      const nextSettings = changesProvider ? { ...settingsRef.current, ...saved } : { ...settingsRef.current, [key]: saved[key] ?? value };
+      applySettings(nextSettings);
+      if (key === "themePreference") setDark(value === "dark");
+      if (!changesProvider) return;
+      if (!nextSettings.defaultProvider || !nextSettings.defaultModel) {
+        setProviderStatus("unconfigured");
+        return;
+      }
+      await checkProvider(nextSettings.defaultProvider, nextSettings.defaultModel, generation);
+    } catch (error) {
+      if (changesProvider && generation === providerGeneration.current) {
+        setProviderStatus("error");
+        setStartupError(error instanceof Error ? error.message : "Provider verification failed.");
+      }
+      throw error;
+    }
+  }
+
+  async function saveCredential(input: { provider: string; label: string; key: string; source?: string }) {
+    if (input.provider === settingsRef.current.defaultProvider) beginProviderVerification();
+    const credential = await client.addCredential(input);
+    setCredentials((current) => [credential, ...current.filter((item) => item.provider !== credential.provider)]);
+  }
+
+  async function deleteCredential(id: string) {
+    if (credentials.find((item) => item.id === id)?.provider === settingsRef.current.defaultProvider) {
+      beginProviderVerification();
+      setProviderStatus("unconfigured");
+      setStartupError("The selected provider credential was removed. Verify a provider to enable AI.");
+    }
+    await client.deleteCredential(id);
+    setCredentials((current) => current.filter((item) => item.id !== id));
   }
 
   async function respondPermission(id: string, decision: "once" | "always" | "reject") {
@@ -260,7 +362,7 @@ export function App() {
   }
 
   if (view === "onboarding") {
-    return <OnboardingScreen providers={providers} initialError={startupError || (providerStatus !== "unconfigured" ? `Provider status: ${providerStatus}` : undefined)} loadModels={(providerID) => client.listProviderModels(providerID)} onVerify={verifyProvider} />;
+    return <OnboardingScreen providers={providers} initialError={startupError || (providerStatus !== "unconfigured" ? `Provider status: ${providerStatus}` : undefined)} loadModels={(providerID) => client.listProviderModels(providerID)} onVerify={verifyProvider} onOpenLocalTools={health === "ready" ? openLocalTools : undefined} />;
   }
 
   return (
@@ -273,15 +375,15 @@ export function App() {
         <Workspace
           project={activeProject} sessions={sessions} activeSession={activeSession} messages={messages} databases={databases} permissions={permissions}
           providers={providers} agents={agents} toolsCatalog={toolsCatalog} skills={skills} mcpServers={mcpServers} plugins={plugins}
-          notebooks={notebooks} lspSessions={lspSessions} artifacts={artifacts} settings={settings}
+          notebooks={notebooks} lspSessions={lspSessions} artifacts={artifacts} settings={settings} aiReady={aiReady} onConfigureProvider={configureProvider}
           onActivateSession={activateSession} onNewSession={newSession} onSendMessage={sendMessage} onPermission={respondPermission} onRefreshEcosystem={refreshEcosystem}
         />
       )}
       {settingsOpen ? (
         <SettingsDialog
           credentials={credentials} databases={databases} providers={providers} settings={settings} onClose={() => setSettingsOpen(false)} onSetting={updateSetting}
-          onCredential={async (input) => { const credential = await client.addCredential(input); setCredentials((current) => [credential, ...current.filter((item) => item.provider !== credential.provider)]); }}
-          onCredentialDelete={async (id) => { await client.deleteCredential(id); setCredentials((current) => current.filter((item) => item.id !== id)); }}
+          onCredential={saveCredential}
+          onCredentialDelete={deleteCredential}
         />
       ) : null}
     </div>

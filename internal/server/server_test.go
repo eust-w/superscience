@@ -1137,7 +1137,8 @@ func TestProviderHealthCredentialDeleteAndModelRefresh(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer db.Close()
-	app := server.New(server.Options{Store: db, ProjectRoot: t.TempDir()})
+	// Exercise credential lifecycle independently of the host's OS keychain.
+	app := server.New(server.Options{Store: db, ProjectRoot: t.TempDir(), Secrets: newMemorySecretStore()})
 	ts := httptest.NewServer(app.Handler())
 	defer ts.Close()
 

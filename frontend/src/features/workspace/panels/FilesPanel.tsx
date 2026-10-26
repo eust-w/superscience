@@ -1,4 +1,4 @@
-import Editor from "@monaco-editor/react";
+import Editor, { localEditorOptions } from "../../../lib/localEditor";
 import { AlertTriangle, FileText, FolderOpen, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { client } from "../../../lib/client";
@@ -77,7 +77,7 @@ export function FilesPanel({ session, onRefresh }: { session: Session | null; on
             value={content}
             onChange={(value) => setContent(value ?? "")}
             theme={document.documentElement.dataset.theme === "dark" ? "vs-dark" : "light"}
-            options={{ minimap: { enabled: false }, fontSize: 12, lineNumbersMinChars: 3, scrollBeyondLastLine: false, automaticLayout: true }}
+            options={{ ...localEditorOptions, minimap: { enabled: false }, fontSize: 12, lineNumbersMinChars: 3, scrollBeyondLastLine: false, automaticLayout: true }}
           />
         ) : (
           <div className="empty">Select a file to inspect it.</div>

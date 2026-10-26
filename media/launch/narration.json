@@ -1,0 +1,75 @@
+[
+  {
+    "id": "question",
+    "eyebrow": "RESEARCH · WITH EVIDENCE",
+    "title": "答案之外，\n还要有证据。",
+    "lines": [
+      "研究，不该只留下一个答案。",
+      "还应该留下，答案从哪里来。"
+    ]
+  },
+  {
+    "id": "introduce",
+    "eyebrow": "INTRODUCING SUPERSCIENCE",
+    "title": "把研究，\n放进同一处。",
+    "lines": [
+      "Superscience，一个本地运行的 AI 科研工作台。",
+      "把文件、工具、Notebook 和证据，放进同一个项目。"
+    ]
+  },
+  {
+    "id": "onboarding",
+    "eyebrow": "REAL PRODUCT · LOCAL TOOLS",
+    "title": "先用本地工具，\n再连接你的 AI。",
+    "lines": [
+      "无需模型，也能打开本地工具。",
+      "需要 AI 对话时，再验证你自己的模型连接。"
+    ]
+  },
+  {
+    "id": "search",
+    "eyebrow": "DISCOVER · ANALYZE",
+    "title": "连接研究资料，\n保留验证边界。",
+    "lines": [
+      "检索、执行、分析。",
+      "已有五十一种登记的科学数据连接器。",
+      "外部服务的可用性，仍需分别验证。"
+    ]
+  },
+  {
+    "id": "tools",
+    "eyebrow": "LOCAL TOOLS · HUMAN CONTROL",
+    "title": "让工具协作，\n让执行可检查。",
+    "lines": [
+      "文件编辑、终端和 Notebook，围绕项目协作。",
+      "工具操作经过权限审批，执行过程可以检查。"
+    ]
+  },
+  {
+    "id": "evidence",
+    "eyebrow": "ARTIFACTS · PROVENANCE",
+    "title": "结果有出处，\n过程能追溯。",
+    "lines": [
+      "把研究结果保存为产物。",
+      "让来源、操作和结果相互连接，形成可以追溯的证据链。"
+    ]
+  },
+  {
+    "id": "architecture",
+    "eyebrow": "OPEN ARCHITECTURE",
+    "title": "本地工作台，\n开放的技术栈。",
+    "lines": [
+      "项目采用 Go、React 和 Wails。",
+      "提供本地工作台，以及可选的自托管分享。"
+    ]
+  },
+  {
+    "id": "release",
+    "eyebrow": "OPEN SOURCE · APACHE 2.0",
+    "title": "让科研流程，\n更透明一点。",
+    "lines": [
+      "源码现已公开，采用 Apache 二点零许可证。",
+      "欢迎运行、检查代码，提交问题，和我们一起把科研流程做得更透明。"
+    ]
+  }
+]
